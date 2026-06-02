@@ -1,10 +1,8 @@
 import random
 
 import arcade
-from pyglet.event import EVENT_HANDLE_STATE
 
 from attack_animation import AttackType, AttackAnimations
-from game_state import GameState
 
 
 SCREEN_WIDTH = 1080
@@ -15,8 +13,6 @@ SCREEN_TITLE = "Rock Paper Cissors +"
 class MyGame(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-
-        self.game_state = GameState.NOT_STARTED
         self.background_color = arcade.color.BLACK
         self.interval = True
         self.computer_damage = 3
@@ -153,7 +149,6 @@ class MyGame(arcade.Window):
         else:
             self.result = 'tie'
 
-        self.game_state = GameState.ROUND_DONE
 
     def on_update(self, delta_time):
         self.scissors_open.on_update()
@@ -196,12 +191,6 @@ class MyGame(arcade.Window):
         self.computer_choice_list.draw()
 
 
-
-    def on_key_press(self, symbol: int, modifiers: int):
-        if symbol == arcade.key.SPACE:
-            print("space")
-            if self.game_state == GameState.NOT_STARTED:
-                self.game_state = GameState.ROUND_ACTIVE
 def main():
 
     game = MyGame()
