@@ -176,6 +176,7 @@ class MyGame(arcade.Window):
                     sprites.visible = True
                 self.hidden_sprites = []
                 self.can_click = True
+                self.result = ''
         if self.timer >= 1:
             self.interval = not self.interval
             self.computer_damage -= 1
