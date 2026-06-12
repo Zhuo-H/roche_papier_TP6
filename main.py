@@ -6,12 +6,11 @@ Jeu de roche papier ciseau
 import random
 
 import arcade
-from pyglet.event import EVENT_HANDLE_STATE
 
 from attack_animation import AttackType, AttackAnimations
 
 
-SCREEN_WIDTH = 1080
+SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 900
 SCREEN_TITLE = "roche papier ciseau +"
 
@@ -99,6 +98,7 @@ class MyGame(arcade.Window):
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.ESCAPE:
             self.close()
+
         if symbol == arcade.key.SPACE and self.game_over:
             self.score = 0
             self.score_computer = 0
@@ -111,15 +111,24 @@ class MyGame(arcade.Window):
             self.can_click = True
             self.hide_timer = 0
 
-            self.computer_rock.visible = True
-            self.computer_paper.visible = True
-            self.computer_scissors.visible = True
+            self.computer_rock.visible = False
+            self.computer_paper.visible = False
+            self.computer_scissors.visible = False
+
+            self.rock_open.visible = True
+            self.paper_open.visible = True
+            self.scissors_open.visible = True
+
+            self.hidden_sprites = []
+
+            self.timer = 0
+            self.show_computer_choice = False
 
     def on_mouse_press(self, x, y, button, modifiers):
+
         if self.game_over == True:
+
             return
-
-
 
         if not self.can_click:
 
@@ -154,20 +163,19 @@ class MyGame(arcade.Window):
             sprites.visible = False
 
 
-
         self.show_computer_choice = True
         self.hide_timer = 2
         self.can_click = False
         self.action()
 
     def action(self):
-        p = self.player_choice
-        c = self.computer_choice
+        player = self.player_choice
+        computer = self.computer_choice
 
-        if (p == 1 and c == 2) or (p == 2 and c == 3) or (p == 3 and c == 1):
+        if (player == 1 and computer == 2) or (player == 2 and computer == 3) or (player == 3 and computer == 1):
             self.result = 'défaite'
             self.score_computer += 1
-        elif (p == 2 and c == 1) or (p == 3 and c == 2) or (p == 1 and c == 3):
+        elif (player == 2 and computer == 1) or (player == 3 and computer == 2) or (player == 1 and computer == 3):
             self.result = 'victoire'
             self.score += 1
         else:
@@ -210,16 +218,22 @@ class MyGame(arcade.Window):
         self.computer_list3.draw()
         self.text()
         self.draw_hands()
-        arcade.draw_text(f"Le résultat est: {self.result}", 250, 500, arcade.color.WHITE, 50)
+        if not self.game_over:
+            arcade.draw_text(
+                f"Le résultat est: {self.result}",
+                250, 500,
+                arcade.color.WHITE,
+                50
+            )
         arcade.draw_text(f"Le pointage de l'ordinateur est: {self.score_computer}", 700, 200, arcade.color.WHITE, 20)
         arcade.draw_text(f"Votre pointage est: {self.score}", 150, 200, arcade.color.WHITE, 20)
         self.computer_choice_list.draw()
 
         if self.game_over == True:
             if self.score >= 3:
-                arcade.draw_text("VOOUS AVEZ GAGNÉ", 400, 600, arcade.color.GREEN, 40)
+                arcade.draw_text("VOUS AVEZ GAGNÉ", 400, 600, arcade.color.GREEN, 40)
             else:
-                arcade.draw_text("L'ORDINATEUR À GAGNÉ", 330, 600, arcade.color.RED)
+                arcade.draw_text("L'ORDINATEUR À GAGNÉ", 330, 600, arcade.color.RED,40)
 
             arcade.draw_text("Appuyez 'ESPACE' pour recommencer", 300, 500, arcade.color.WHITE,25)
             arcade.draw_text("Appuyer 'ESC' pour quitter", 340, 550, arcade.color.WHITE,25)
